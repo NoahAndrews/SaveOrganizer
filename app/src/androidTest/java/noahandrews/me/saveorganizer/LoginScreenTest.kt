@@ -14,16 +14,11 @@ import android.support.test.espresso.action.ViewActions.*
 import android.support.test.uiautomator.UiDevice
 import android.support.test.uiautomator.UiSelector
 import org.junit.Before
-import org.hamcrest.core.AllOf.*
-import org.hamcrest.core.Is.*
-import org.hamcrest.core.IsInstanceOf.*
-import org.hamcrest.core.IsEqual.*
-import org.hamcrest.collection.IsMapContaining.*
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class LoginScreenTest {
-    @Rule @JvmField public val activityRule = ActivityTestRule(LoginActivity::class.java)
+    @Rule @JvmField val activityRule = ActivityTestRule(LoginActivity::class.java)
 
     private lateinit var device: UiDevice
     private lateinit var selector: UiSelector
@@ -37,31 +32,48 @@ class LoginScreenTest {
         selector = UiSelector()
     }
 
-    @Before public fun setupRedditCreds() {
-
+    @Before fun setupRedditCreds() {
+        //TODO: replace these fake ones with ones from Gradle
+        redditUsername = "testuser"
+        redditPassword = "testpass"
     }
 
     //TODO: Log out in a Before method
 
-    @Test public fun loginToReddit() {
+    //TODO: Add a test that only pretends to log into Reddit, using Espresso's intent mocking thing
+
+    /**
+     * The purpose of a test that actually logs in to Reddit is to verify that nothing has changed with Reddit's oauth setup or anything.
+     */
+    @Test fun loginToReddit() {
         onView(withId(R.id.button_login)).perform(click())
 
-        val usernameField = device.findObject(selector.resourceId("username"))
+        val usernameField = device.findObject(selector.resourceId("user_login"))
         usernameField.click()
         usernameField.text = redditUsername
 
-        val passwordField = device.findObject(selector.resourceId("password"))
+        val passwordField = device.findObject(selector.resourceId("passwd_login"))
         passwordField.click()
         passwordField.text = redditPassword
+//        device.pressBack()
+//        SystemClock.sleep(200)
 
-        val loginButton = device.findObject(selector.resourceId("login"))
+        // Click on something to dismiss the keyboard
+        val login = device.findObject(selector.descriptionContains("log in or sign up"))
+        login.click()
+
+        val loginButton = device.findObject(selector.className("android.widget.Button"))
         loginButton.click()
 
-        val authorizeButton = device.findObject(selector.resourceId("authorize"))
+        val authorizeButton = device.findObject(selector.description("allow"))
         authorizeButton.click()
 
-        //See this article for how to do this correctly: https://medium.com/google-developers/adapterviews-and-espresso-f4172aa853cf
+        throw RuntimeException()
+
+        // TODO: See this article for how to do this correctly: https://medium.com/google-developers/adapterviews-and-espresso-f4172aa853cf
 //        onData(allOf(is(instanceOf(Map::class.java)), hasEntry(equalTo(MainActivity.ROW), is(redditSaveTitle)))
 
     }
+
+    // TODO: Make another test that checks for graceful handling of declination
 }
