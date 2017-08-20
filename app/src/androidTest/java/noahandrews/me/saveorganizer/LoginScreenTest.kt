@@ -28,54 +28,21 @@ class LoginScreenTest {
         selector = UiSelector()
     }
 
-
-    // Deprecated setup for logging into reddit within a test
-  /*
-    private lateinit var redditUsername: String
-    private lateinit var redditPassword: String
-    private lateinit var redditSaveTitle: String
-    @Before fun setupRedditCreds() {
-        //TODO: replace these fake ones with ones from Gradle
-        redditUsername = BuildConfig.REDDIT_TEST_USERNAME
-        redditPassword = BuildConfig.REDDIT_TEST_PASSWORD
-        redditSaveTitle = BuildConfig.REDDIT_TEST_POST_TITLE
-    }*/
-
     //TODO: Log out in a Before method
 
     //TODO: Add a test that only pretends to log into Reddit, using Espresso's intent mocking thing
 
     /**
      * The purpose of a test that actually logs in to Reddit is to verify that nothing has changed with Reddit's oauth setup or anything.
+     * See the readme for how to set up and log into a reddit account that will allow this test to pass.
      */
     @Test fun loginToReddit() {
         onView(withId(R.id.button_login)).perform(click())
 
-        // My original approach was to log into reddit as a part of the test.
-        // See the readme for what to do instead. The old method depended on the tester being logged
-        // out of reddit in Chrome, the new one depends on them being logged in. Putting this here
-        // so that it's in the git history, in case there's an issue with the new way.
-
-        /*val usernameField = device.findObject(selector.resourceId("user_login"))
-        usernameField.click()
-        usernameField.text = redditUsername
-        device.pressEnter()
-
-        val passwordField = device.findObject(selector.resourceId("passwd_login"))
-        passwordField.click()
-        passwordField.text = redditPassword
-        device.pressEnter()
-
-        // Click on something to dismiss the keyboard
-        val login = device.findObject(selector.descriptionContains("log in or sign up"))
-        login.click()
-
-        val loginButton = device.findObject(selector.className("android.widget.Button"))
-        loginButton.click()*/
-
         val authorizeButton = device.findObject(selector.description("Allow"))
         authorizeButton.click()
 
+        // This test is unfinished, so make sure it fails for now.
         throw RuntimeException()
 
         // TODO: See this article for how to do this correctly: https://medium.com/google-developers/adapterviews-and-espresso-f4172aa853cf
