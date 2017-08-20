@@ -23,20 +23,23 @@ class LoginScreenTest {
     private lateinit var device: UiDevice
     private lateinit var selector: UiSelector
 
-    private lateinit var redditUsername: String
-    private lateinit var redditPassword: String
-    private lateinit var redditSaveTitle: String
-
     @Before fun setupUiAutomator() {
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         selector = UiSelector()
     }
 
+
+    // Deprecated setup for logging into reddit within a test
+  /*
+    private lateinit var redditUsername: String
+    private lateinit var redditPassword: String
+    private lateinit var redditSaveTitle: String
     @Before fun setupRedditCreds() {
         //TODO: replace these fake ones with ones from Gradle
-        redditUsername = "testuser"
-        redditPassword = "testpass"
-    }
+        redditUsername = BuildConfig.REDDIT_TEST_USERNAME
+        redditPassword = BuildConfig.REDDIT_TEST_PASSWORD
+        redditSaveTitle = BuildConfig.REDDIT_TEST_POST_TITLE
+    }*/
 
     //TODO: Log out in a Before method
 
@@ -48,24 +51,29 @@ class LoginScreenTest {
     @Test fun loginToReddit() {
         onView(withId(R.id.button_login)).perform(click())
 
-        val usernameField = device.findObject(selector.resourceId("user_login"))
+        // My original approach was to log into reddit as a part of the test.
+        // See the readme for what to do instead. The old method depended on the tester being logged
+        // out of reddit in Chrome, the new one depends on them being logged in. Putting this here
+        // so that it's in the git history, in case there's an issue with the new way.
+
+        /*val usernameField = device.findObject(selector.resourceId("user_login"))
         usernameField.click()
         usernameField.text = redditUsername
+        device.pressEnter()
 
         val passwordField = device.findObject(selector.resourceId("passwd_login"))
         passwordField.click()
         passwordField.text = redditPassword
-//        device.pressBack()
-//        SystemClock.sleep(200)
+        device.pressEnter()
 
         // Click on something to dismiss the keyboard
         val login = device.findObject(selector.descriptionContains("log in or sign up"))
         login.click()
 
         val loginButton = device.findObject(selector.className("android.widget.Button"))
-        loginButton.click()
+        loginButton.click()*/
 
-        val authorizeButton = device.findObject(selector.description("allow"))
+        val authorizeButton = device.findObject(selector.description("Allow"))
         authorizeButton.click()
 
         throw RuntimeException()

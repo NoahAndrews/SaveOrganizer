@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+/*def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))*/
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
@@ -16,6 +20,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        /*debug {
+            it.buildConfigField 'String', 'REDDIT_TEST_USERNAME', keystoreProperties['redditUsername']
+            it.buildConfigField 'String', 'REDDIT_TEST_PASSWORD', keystoreProperties['redditPassword']
+            it.buildConfigField 'String', 'REDDIT_TEST_POST_TITLE', "\"Kotlin is officially supported on Android\""
+        }*/
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

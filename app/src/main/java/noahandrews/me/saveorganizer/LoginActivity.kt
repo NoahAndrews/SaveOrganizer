@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun generateOauthUri() : Uri {
+    private fun generateOauthUri() : Uri {
         val state = UUID.randomUUID().toString()
         val clientId = "dNjcxkM9pTQ0sQ"
         val redirectUri = "http://saveorganizer.github.io/redirect"
