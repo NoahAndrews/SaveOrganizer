@@ -37,7 +37,7 @@ class LoginScreenTest {
      * See the readme for how to set up and log into a reddit account that will allow this test to pass.
      */
     @Test fun loginToReddit() {
-        onView(withId(R.id.button_login)).perform(click())
+        onView(withId(R.id.loginButton)).perform(click())
 
         val authorizeButton = device.findObject(selector.description("Allow"))
         authorizeButton.click()

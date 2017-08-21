@@ -4,17 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.customtabs.CustomTabsClient
 import android.support.customtabs.CustomTabsIntent
 import android.support.v4.content.ContextCompat
-import android.widget.Button
+import kotlinx.android.synthetic.main.activity_login.*
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 import org.chromium.customtabsclient.CustomTabsActivityHelper
 import java.util.*
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var loginButton: Button
-
     private lateinit var customTabsHelperFragment: CustomTabsHelperFragment
 
     private val preloadUrl = Uri.parse("https://www.reddit.com/login.compact") //TODO: evaluate if this works
@@ -29,10 +26,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_login)
 
         if(intent.action == Intent.ACTION_VIEW) {
             val redirectUri = intent.data
-            val isStateCorrect = redirectUri.getQueryParameter("state") == lastOauthStateValue //FIXME: Get this from SharedPreferences
+            val isStateCorrect = redirectUri.getQueryParameter("state") == "" //FIXME: Get this from SharedPreferences
             if (redirectUri.queryParameterNames.contains("error") || !isStateCorrect) {
                 // FIXME: Handle the error. Possible errors are an incorrect state, and those listed on this page:
                 // https://github.com/reddit/reddit/wiki/OAuth2
@@ -41,7 +39,6 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        setContentView(R.layout.activity_login)
 
         customTabsHelperFragment = CustomTabsHelperFragment.attachTo(this)
         customTabsHelperFragment.setConnectionCallback(object:CustomTabsActivityHelper.ConnectionCallback {
@@ -50,8 +47,6 @@ class LoginActivity : AppCompatActivity() {
             }
             override fun onCustomTabsDisconnected() {}
         })
-
-        loginButton = findViewById(R.id.button_login)
 
         loginButton.setOnClickListener {
             val customTabIntent = CustomTabsIntent.Builder()
