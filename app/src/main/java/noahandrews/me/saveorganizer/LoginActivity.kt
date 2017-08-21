@@ -14,18 +14,33 @@ import java.util.*
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
-    private lateinit var customTabClient: CustomTabsClient
 
     private lateinit var customTabsHelperFragment: CustomTabsHelperFragment
 
-    private val preloadUrl = Uri.parse("https://www.reddit.com/login.compact") //TODO: evaulate if this works
+    private val preloadUrl = Uri.parse("https://www.reddit.com/login.compact") //TODO: evaluate if this works
 
     private val customTabsFallback = CustomTabsActivityHelper.CustomTabsFallback {
         activity, uri -> activity.startActivity(Intent(Intent.ACTION_VIEW, uri))
     }
 
+
+    // TODO: Attempt to reuse the credentials from other reddit apps using AccountManager, but only
+    // for API 26 and higher. We don't want to have to request access to Contacts.
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if(intent.action == Intent.ACTION_VIEW) {
+            val redirectUri = intent.data
+            val isStateCorrect = redirectUri.getQueryParameter("state") == lastOauthStateValue //FIXME: Get this from SharedPreferences
+            if (redirectUri.queryParameterNames.contains("error") || !isStateCorrect) {
+                // FIXME: Handle the error. Possible errors are an incorrect state, and those listed on this page:
+                // https://github.com/reddit/reddit/wiki/OAuth2
+            } else {
+                // FIXME: Store the oauth token
+            }
+        }
+
         setContentView(R.layout.activity_login)
 
         customTabsHelperFragment = CustomTabsHelperFragment.attachTo(this)
@@ -44,20 +59,19 @@ class LoginActivity : AppCompatActivity() {
                     //TODO: Add referrer
                     .setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
                     .build()
-            CustomTabsHelperFragment.open(this, customTabIntent, generateOauthUri(), customTabsFallback)
+            val oauthStateValue = UUID.randomUUID().toString() //FIXME: Persist this to SharedPreferences
+            CustomTabsHelperFragment.open(this, customTabIntent, generateOauthUri(oauthStateValue), customTabsFallback)
         }
     }
 
-    private fun generateOauthUri() : Uri {
-        val state = UUID.randomUUID().toString()
+    private fun generateOauthUri(state: String) : Uri {
         val clientId = "dNjcxkM9pTQ0sQ"
-        val redirectUri = "http://saveorganizer.github.io/redirect"
+        val redirectUri = "me.noahandrews.saveorganizer://logincallback"
         val duration = "permanent"
         val scopes = "identity history"
 
         return Uri.parse("https://www.reddit.com/api/v1/authorize.compact?" +
                 "client_id=$clientId&response_type=code&state=$state&redirect_uri=$redirectUri" +
                 "&duration=$duration&scope=$scopes")
-
     }
 }

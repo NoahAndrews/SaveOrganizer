@@ -30,8 +30,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:customtabs:26.0.1'
 
-    //TODO: If my PR doesn't get merged, use my own version of this library with the MM fix
-    implementation 'me.zhanghai.android.customtabshelper:library:1.0.3'
+    implementation 'me.zhanghai.android.customtabshelper:library:1.0.4'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.0'
