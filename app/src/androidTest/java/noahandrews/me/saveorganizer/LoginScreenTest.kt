@@ -41,9 +41,10 @@ class LoginScreenTest {
 
         val authorizeButton = device.findObject(selector.description("Allow"))
         authorizeButton.click()
+        authorizeButton.click()
 
         // This test is unfinished, so make sure it fails for now.
-        throw RuntimeException()
+        throw RuntimeException("This test is unfinished.")
 
         // TODO: See this article for how to do this correctly: https://medium.com/google-developers/adapterviews-and-espresso-f4172aa853cf
 //        onData(allOf(is(instanceOf(Map::class.java)), hasEntry(equalTo(MainActivity.ROW), is(redditSaveTitle)))
