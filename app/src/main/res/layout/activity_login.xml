@@ -34,7 +34,7 @@
         android:layout_marginStart="8dp"
         android:text="SaveOrganizer for Reddit"
         android:textAppearance="@android:style/TextAppearance.Material.Large.Inverse"
-        app:layout_constraintBottom_toTopOf="@+id/button_login"
+        app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
