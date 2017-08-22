@@ -1,7 +1,11 @@
 package noahandrews.me.saveorganizer
 
+import android.accounts.AccountManager
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
@@ -15,6 +19,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var customTabsHelperFragment: CustomTabsHelperFragment
 
     private val preloadUrl = Uri.parse("https://www.reddit.com/login.compact") //TODO: evaluate if this works
+
+    private val CHOOSE_ACCOUNT_REQUEST = 1
 
     private val customTabsFallback = CustomTabsActivityHelper.CustomTabsFallback {
         activity, uri -> activity.startActivity(Intent(Intent.ACTION_VIEW, uri))
@@ -56,6 +62,35 @@ class LoginActivity : AppCompatActivity() {
                     .build()
             val oauthStateValue = UUID.randomUUID().toString() //FIXME: Persist this to SharedPreferences
             CustomTabsHelperFragment.open(this, customTabIntent, generateOauthUri(oauthStateValue), customTabsFallback)
+        }
+
+        appLoginButton.setOnClickListener {
+            var chooseAccountIntent: Intent
+//            var authenticatorTypes = AccountManager.get(this).authenticatorTypes
+            val redditPackages = arrayOf("com.reddit.account")
+            val accountChooserPrompt = "Select your reddit username:"
+            // TODO: figure out how to filter out the "Reddit for Android" account entry
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                chooseAccountIntent = AccountManager.newChooseAccountIntent(null, null, redditPackages, accountChooserPrompt, null, null,
+                        null)
+            } else {
+                chooseAccountIntent = AccountManager.newChooseAccountIntent(null, null, redditPackages, false,accountChooserPrompt, null, null, null)
+            }
+            startActivityForResult(chooseAccountIntent, CHOOSE_ACCOUNT_REQUEST)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == CHOOSE_ACCOUNT_REQUEST && resultCode == Activity.RESULT_OK) {
+            val accountName = data?.extras!![AccountManager.KEY_ACCOUNT_NAME] //TODO: figure out how to get rid of !!
+            val accountType = data.extras!![AccountManager.KEY_ACCOUNT_TYPE]
+            val accounts = AccountManager.get(this).accounts
+            // TODO: Findings. While requesting the contact permission shouldn't be necessary on O,
+            // there doesn't seem to be a way to filter out the extra account entry.
+            // Perhaps the Reddit app will eventually do that for me once it targets O.
+            // I would have to generate a separate APK for lollipop devices if I want to have the feature only on API 23+.
+            // API 26+ shouldn't require the permission at all, I think.
+            val i =0
         }
     }
 
