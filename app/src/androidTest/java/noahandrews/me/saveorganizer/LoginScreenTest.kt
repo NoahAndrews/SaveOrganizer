@@ -41,7 +41,12 @@ class LoginScreenTest {
 
         val authorizeButton = device.findObject(selector.description("Allow"))
         authorizeButton.click()
-        authorizeButton.click()
+
+        // TODO This probably won't be necessary once we're testing a RecyclerView as well.
+        // The point is basically to give UiAutomator a chance to finish clicking authorizeButton
+        // before the test finishes. UiAutomator is slow.
+        val titleTextView = device.findObject(selector.resourceId("noahandrews.me.saveorganizer:id/titleTextView"))
+        titleTextView.click()
 
         // This test is unfinished, so make sure it fails for now.
         throw RuntimeException("This test is unfinished.")
